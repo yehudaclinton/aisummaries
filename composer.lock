@@ -1,0 +1,73 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "4774be903801fa227f614647eb385251",
+    "packages": [
+        {
+            "name": "pdfcrowd/pdfcrowd",
+            "version": "5.13.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pdfcrowd/pdfcrowd-php.git",
+                "reference": "0c7fe81555695004c33fab5c0b84acab02255ba8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pdfcrowd/pdfcrowd-php/zipball/0c7fe81555695004c33fab5c0b84acab02255ba8",
+                "reference": "0c7fe81555695004c33fab5c0b84acab02255ba8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.10"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "pdfcrowd.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pdfcrowd Team",
+                    "email": "support@pdfcrowd.com",
+                    "homepage": "https://pdfcrowd.com/api/"
+                }
+            ],
+            "description": "A client library for the Pdfcrowd API. It lets you convert between HTML, PDF and various image formats",
+            "homepage": "https://pdfcrowd.com/api/",
+            "keywords": [
+                "api",
+                "client",
+                "convert",
+                "html",
+                "pdf",
+                "web page",
+                "web service"
+            ],
+            "support": {
+                "issues": "https://github.com/pdfcrowd/pdfcrowd-php/issues",
+                "source": "https://github.com/pdfcrowd/pdfcrowd-php/tree/5.13.0"
+            },
+            "time": "2023-03-30T13:22:03+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.1.3"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}

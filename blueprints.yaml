@@ -1,0 +1,36 @@
+name: Ai Summaries
+slug: ai-summaries
+type: plugin
+version: 0.1.0
+description: create pdf&#039;s of link from sqlite and create summaries of them using api&#039;s
+icon: plug
+author:
+  name: yehuda clinton
+  email: yehuda@gmx.us
+homepage: https://github.com/yehudaclinton/grav-plugin-ai-summaries
+demo: http://demo.yoursite.com
+keywords: grav, plugin, etc
+bugs: https://github.com/yehudaclinton/grav-plugin-ai-summaries/issues
+docs: https://github.com/yehudaclinton/grav-plugin-ai-summaries/blob/develop/README.md
+license: MIT
+
+dependencies:
+  - { name: grav, version: '>=1.6.0' }
+
+form:
+  validation: loose
+  fields:
+    enabled:
+      type: toggle
+      label: PLUGIN_ADMIN.PLUGIN_STATUS
+      highlight: 1
+      default: 0
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+    text_var:
+      type: text
+      label: PLUGIN_AI_SUMMARIES.TEXT_VARIABLE
+      help: PLUGIN_AI_SUMMARIES.TEXT_VARIABLE_HELP

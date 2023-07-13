@@ -1,0 +1,25 @@
+{
+  "name": "yehudaclinton/ai-summaries",
+  "type": "grav-plugin",
+  "description": "create pdf&#039;s of link from sqlite and create summaries of them using api&#039;s",
+  "keywords": ["plugin"],
+  "homepage": "https://github.com/yehudaclinton/grav-plugin-ai-summaries",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "yehuda clinton",
+      "email": "yehuda@gmx.us",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.3",
+    "pdfcrowd/pdfcrowd": "^5.13"
+  },
+  "autoload": {
+    "psr-4": {
+      "Grav\\Plugin\\AiSummaries\\": "classes/"
+    },
+    "classmap":  ["ai-summaries.php"]
+  }
+}
