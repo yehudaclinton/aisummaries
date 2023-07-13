@@ -1,7 +1,8 @@
-<<<<<<< HEAD
 # aisummaries
 gravcms plugin for ai summaries of articles
 =======
+
+
 # Ai Summaries Plugin
 
 **This README.md file should be modified to describe the features, installation, configuration, and general usage of the plugin.**
@@ -57,5 +58,3 @@ Note that if you use the Admin Plugin, a file with your configuration named ai-s
 ## To Do
 
 - [ ] Future plans, if any
-
->>>>>>> 2423bfc (initial commit)
