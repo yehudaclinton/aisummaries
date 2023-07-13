@@ -5,9 +5,8 @@ use Composer\Autoload\ClassLoader;
 use Grav\Common\Plugin;
 use Composer\Autoload\pdfcrowd;
 
-require_once 'user/data/SQLiteConnection.php';
+require_once 'user/data/SQLiteConnection.php'; //need to create
 use Grav\db\SQLiteConnection;
-
 
 
 /**
@@ -48,7 +47,6 @@ class AiSummariesPlugin extends Plugin
             return;
         }
 
-
 $SQLiteConnection = new Aisummaries\SQLiteConnection();
 $pdo = $SQLiteConnection->connect();
 
@@ -84,11 +82,9 @@ curl_setopt($ch, CURLOPT_POST, 1);
 $headers = array();
 $headers[] = 'X-Api-Key: ' . $apiKey;
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
 // Attach the file to the request.
 $post = array('file'=> new \CURLFile($filePath, 'application/pdf'));
 curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 $result = curl_exec($ch);
@@ -107,7 +103,6 @@ if(curl_errno($ch)){
 curl_close ($ch);
 $this->grav['log']->info('uploaded pdf '.$sourceId.' now getting summary');
 
-
 $ch = curl_init(); //summarize pdf
 curl_setopt($ch, CURLOPT_URL, 'https://api.chatpdf.com/v1/chats/message');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -123,7 +118,7 @@ $data = array(
     array(
       'role' => 'user',
       'content' => 'summerize the articles main points?'
-    )
+    ) //TODO make this a dashboard setting (or yaml)
   )
 );
 
