@@ -30,7 +30,19 @@ form:
         0: PLUGIN_ADMIN.DISABLED
       validate:
         type: bool
-    text_var:
+    pdfCrowdApiKey:
       type: text
-      label: PLUGIN_AI_SUMMARIES.TEXT_VARIABLE
-      help: PLUGIN_AI_SUMMARIES.TEXT_VARIABLE_HELP
+      label: pdfCrowdApiKey
+      help: html to pdf converter api
+    chatPdfApiKey:
+      type: text
+      label: chatPdfApiKey
+      help: chatPdf  keyApi
+    articleNumber:
+      type: number
+      label: articleNumber
+      help: which single article summaries
+    summaryQ:
+      type: text
+      label: summaryQ
+      help: question to ask chatPDF about the article
