@@ -5,8 +5,9 @@ use Composer\Autoload\ClassLoader;
 use Grav\Common\Plugin;
 use Composer\Autoload\pdfcrowd;
 
-require_once 'user/data/SQLiteConnection.php'; //need to create
+require_once 'user/data/SQLiteConnection.php';
 use Grav\db\SQLiteConnection;
+
 
 
 /**
@@ -46,11 +47,13 @@ class AiSummariesPlugin extends Plugin
         if ($this->isAdmin()) {
             return;
         }
+        
+$options = $this->config->get('plugins.ai-summaries');
 
 $SQLiteConnection = new Aisummaries\SQLiteConnection();
 $pdo = $SQLiteConnection->connect();
 
-$stm = $pdo->query("SELECT * FROM links WHERE category = 'test'"); //
+$stm = $pdo->query("SELECT * FROM links WHERE category = 'test'");
 
    if(!$pdo) {
       echo $db->lastErrorMsg();
@@ -58,23 +61,34 @@ $stm = $pdo->query("SELECT * FROM links WHERE category = 'test'"); //
       $this->grav['log']->info("Opened database successfully");
    }
 
-      $articles = []; 
-      while ($row = $stm->fetch(\PDO::FETCH_ASSOC)) {
-          $articles[] = [
-              'title' => $row['title'],
-              'link' => $row['links']
-          ];
+   $articles = []; 
+   while ($row = $stm->fetch(\PDO::FETCH_ASSOC)) {
+       $articles[] = [
+           'title' => $row['title'],
+           'link' => $row['links'],
+           'summary' => $row['summary']
+       ];
+   }
+
+      $article = $articles[$options['articleNumber']]
+      $url = $article['link'];
+      //TODO loop through the last 10 articles not just one
+      
+      //check if already summarised
+      if($article['summary']!=null) {
+        $this->grav['log']->info('already did '.$options['articleNumber']);
+        return;
       }
 
-      $url = $articles[5]['link'];//TODO loop through the last articles not just #5
+
 
         // download a pdf of the article links using pdfcrowd API
-    $client = new \Pdfcrowd\HtmlToPdfClient("yehudaclinton", "fca7cb******22dfa1f0");
-    $client->convertUrlToFile($url, "user/data/pdf/".substr($articles[5]['title'], 0, 3)."test.pdf");
+    $client = new \Pdfcrowd\HtmlToPdfClient("yehudaclinton", $options['pdfCrowdApiKey']);
+    $client->convertUrlToFile($url, "user/data/pdf/".substr($article['title'], 0, 3)."test.pdf");
 
-$filePath = 'user/data/pdf/'.substr($articles[5]['title'], 0, 3).'test.pdf';
+$filePath = 'user/data/pdf/'.substr($article['title'], 0, 3).'test.pdf';
 $this->grav['log']->info('downloaded-pdf. now uploading '.$filePath);
-$apiKey = 'sec_chNRK31*****S3yKFnLMsnL'; //chatpdf
+$apiKey = $options['chatPdfApiKey']; //chatpdf
 
 $ch = curl_init(); //upload pdf
 curl_setopt($ch, CURLOPT_URL, 'https://api.chatpdf.com/v1/sources/add-file');
@@ -82,9 +96,11 @@ curl_setopt($ch, CURLOPT_POST, 1);
 $headers = array();
 $headers[] = 'X-Api-Key: ' . $apiKey;
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
 // Attach the file to the request.
 $post = array('file'=> new \CURLFile($filePath, 'application/pdf'));
 curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 $result = curl_exec($ch);
@@ -103,6 +119,7 @@ if(curl_errno($ch)){
 curl_close ($ch);
 $this->grav['log']->info('uploaded pdf '.$sourceId.' now getting summary');
 
+
 $ch = curl_init(); //summarize pdf
 curl_setopt($ch, CURLOPT_URL, 'https://api.chatpdf.com/v1/chats/message');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -117,8 +134,8 @@ $data = array(
   'messages' => array(
     array(
       'role' => 'user',
-      'content' => 'summerize the articles main points?'
-    ) //TODO make this a dashboard setting (or yaml)
+      'content' => $options['summaryQ']
+    )
   )
 );
 
@@ -131,13 +148,16 @@ if(curl_errno($ch)){
 }
 curl_close ($ch);
 
+  //save the new summaries to db
+  $sql = "INSERT INTO links(summary) VALUES($resultDecoded['content'])";
+  $pdo->prepare($sql)->execute($data);
+
   // save summary to summaries page
   $content = file_get_contents("user/pages/04.summaries/default.md");
   $pos = strpos($content, "---", strpos($content, "---",3)+strlen("---"));
-  $newcontnent = substr_replace($content,"---  \n  \n**[".($articles[5]['title'])."](".$articles[5]['link'].")** ".$resultDecoded['content']."  \n  \n",$pos,3);
+  $newcontnent = substr_replace($content,"---  \n  \n**[".($article['title'])."](".$article['link'].")** ".$resultDecoded['content']."  \n  \n",$pos,3);
   //rewrite the whole page including new summary
   $rewrite = file_put_contents("user/pages/04.summaries/default.md", $newcontnent);
-
 
         // Enable the main events we are interested in
         $this->enable([
