@@ -1,2 +1,6 @@
+name: AiSummeries
 enabled: true
-text_var: Custom Text added by the **Ai Summaries** plugin (disable plugin to remove)
+pdfCrowdApiKey: null
+chatPdfApiKey: null
+articleNumber: 0
+summaryQ: 'summerize the articles main points?'
