@@ -7,8 +7,13 @@ gravcms plugin for ai summaries of articles
 The **Ai Summaries** Plugin is an extension for [Grav CMS](https://github.com/getgrav/grav). create pdf&#039;s of link from sqlite and create summaries of them using api&#039;s
 
 ## Prereqs
+install chatpdf and pdfcrowd with the following:
 composr install from plugin directory
 
+create sqlite database with
+CREATE TABLE links(title text, links text, category text, summary text);
+
+php sqlite connection
 <?php
 namespace Grav\Plugin\Aisummaries;
 
@@ -22,6 +27,7 @@ class SQLiteConnection {
         return $this->pdo;
     }
 }
+?>
 
 ## Installation
 
