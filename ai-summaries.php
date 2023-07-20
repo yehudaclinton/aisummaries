@@ -5,9 +5,8 @@ use Composer\Autoload\ClassLoader;
 use Grav\Common\Plugin;
 use Composer\Autoload\pdfcrowd;
 
-require_once 'user/data/SQLiteConnection.php';
+require_once 'user/data/SQLiteConnection.php'; //need to create
 use Grav\db\SQLiteConnection;
-
 
 
 /**
@@ -47,13 +46,13 @@ class AiSummariesPlugin extends Plugin
         if ($this->isAdmin()) {
             return;
         }
-        
+
 $options = $this->config->get('plugins.ai-summaries');
 
 $SQLiteConnection = new Aisummaries\SQLiteConnection();
 $pdo = $SQLiteConnection->connect();
 
-$stm = $pdo->query("SELECT * FROM links WHERE category = 'test'");
+$stm = $pdo->query("SELECT * FROM links WHERE category = 'default'"); //
 
    if(!$pdo) {
       echo $db->lastErrorMsg();
@@ -61,25 +60,24 @@ $stm = $pdo->query("SELECT * FROM links WHERE category = 'test'");
       $this->grav['log']->info("Opened database successfully");
    }
 
-   $articles = []; 
-   while ($row = $stm->fetch(\PDO::FETCH_ASSOC)) {
-       $articles[] = [
-           'title' => $row['title'],
-           'link' => $row['links'],
-           'summary' => $row['summary']
-       ];
-   }
+    $articles = [];
+    while ($row = $stm->fetch(\PDO::FETCH_ASSOC)) {
+        $articles[] = [
+            'title' => $row['title'],
+            'link' => $row['link'],
+            'summary' => $row['summary']
+        ];
+    }
 
-      $article = $articles[$options['articleNumber']]
+      $article = $articles[$options['articleNumber']];
       $url = $article['link'];
       //TODO loop through the last 10 articles not just one
-      
+
       //check if already summarised
       if($article['summary']!=null) {
         $this->grav['log']->info('already did '.$options['articleNumber']);
         return;
       }
-
 
 
         // download a pdf of the article links using pdfcrowd API
@@ -149,15 +147,15 @@ if(curl_errno($ch)){
 curl_close ($ch);
 
   //save the new summaries to db
-  $sql = "INSERT INTO links(summary) VALUES($resultDecoded['content'])";
-  $pdo->prepare($sql)->execute($data);
+  $sql = "INSERT INTO links(summary) VALUES(".$resultDecoded['content'].")";
+  //$pdo->prepare($sql)->execute($data);
 
   // save summary to summaries page
   $content = file_get_contents("user/pages/04.summaries/default.md");
   $pos = strpos($content, "---", strpos($content, "---",3)+strlen("---"));
   $newcontnent = substr_replace($content,"---  \n  \n**[".($article['title'])."](".$article['link'].")** ".$resultDecoded['content']."  \n  \n",$pos,3);
   //rewrite the whole page including new summary
-  $rewrite = file_put_contents("user/pages/04.summaries/default.md", $newcontnent);
+  $rewrite = file_put_contents("user/pages/07.database/default.md", $newcontnent);
 
         // Enable the main events we are interested in
         $this->enable([
