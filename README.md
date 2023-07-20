@@ -77,4 +77,4 @@ Note that if you use the Admin Plugin, a file with your configuration named ai-s
 
 ## To Do
 
-- [ ] Future plans, if any
+- [ ] printable summary page https://codeengineered.com/blog/2014/convert-markdown-pdf-using-php/
