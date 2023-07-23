@@ -46,3 +46,13 @@ form:
       type: text
       label: summaryQ
       help: question to ask chatPDF about the article
+    category:
+      type: select
+      label: Dropdown Field
+      default: default
+      options:
+        default: main
+        halachic-issues: Halacha
+        timeless-issues: timeless issues
+        in-depth-issues: in depth
+        %: All
