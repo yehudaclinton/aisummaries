@@ -52,7 +52,8 @@ $options = $this->config->get('plugins.ai-summaries');
 $SQLiteConnection = new Aisummaries\SQLiteConnection();
 $pdo = $SQLiteConnection->connect();
 
-$stm = $pdo->query("SELECT * FROM links WHERE category = 'default'"); //
+//TODO sanatize and bind params
+$stm = $pdo->query("SELECT * FROM links WHERE category = ".$article['category']);
 
    if(!$pdo) {
       echo $db->lastErrorMsg();
@@ -98,7 +99,6 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 // Attach the file to the request.
 $post = array('file'=> new \CURLFile($filePath, 'application/pdf'));
 curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 $result = curl_exec($ch);
@@ -147,11 +147,11 @@ if(curl_errno($ch)){
 curl_close ($ch);
 
   //save the new summaries to db
-  $sql = "INSERT INTO links(summary) VALUES(".$resultDecoded['content'].")";
-  //$pdo->prepare($sql)->execute($data);
+  $sql = "INSERT INTO links(summary) VALUES(?)";
+  $pdo->prepare($sql)->execute($resultDecoded['content']);
 
   // save summary to summaries page
-  $content = file_get_contents("user/pages/04.summaries/default.md");
+  $content = file_get_contents("user/pages/07.database/default.md");
   $pos = strpos($content, "---", strpos($content, "---",3)+strlen("---"));
   $newcontnent = substr_replace($content,"---  \n  \n**[".($article['title'])."](".$article['link'].")** ".$resultDecoded['content']."  \n  \n",$pos,3);
   //rewrite the whole page including new summary
